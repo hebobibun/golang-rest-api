@@ -1,0 +1,242 @@
+openapi: 3.0.3
+info:
+  title: Auth API
+  description: |-
+    Ini adalah Auth API untuk tugas Open API
+  contact:
+    name: Habib
+    email: habib@alterra.id
+    url: https://habib.com
+  version: 1.0.0
+servers:
+  - url: https://test.habib.com
+    description: development server
+  - url: https://habib.com
+    description: production server
+  - url: https://legacy.habib.com/{versi}
+    description: legacy servers
+    variables:
+      versi:
+        default: v1
+        enum:
+          - v1
+          - v2
+          - v3
+tags:
+  - name: Auth
+  - name: User
+paths:
+  /register:
+    post:
+      tags:
+        - "Auth"
+        - "User"
+      description: Endpoint to insert a new user
+      summary: Insert a new user
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+            example:
+              name: Habib
+              email: habib@alterra.id
+              password: habib123
+      responses:
+        201:
+          description: "Inserted a new user successfully"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "Registered successfully"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+  /login:
+    post:
+      tags:
+        - "Auth"
+        - "User"
+      description: Endpoint to get the session
+      summary: Logs user into the system
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                password:
+                  type: string
+                  format: password
+      responses:
+        200:
+          description: "Logged in successfully"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseObject'
+              example:
+                data:
+                message: "Logged in successfully"
+        403:
+          description: "Invalid user input"
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+              example:
+                message: "email/password doesn't match"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+  /user/{id}:
+    get:
+      tags:
+        - User
+      summary: Get user by id
+      description: get a user data with id as parameter
+      operationId: getUserByName
+      parameters:
+        - name: id
+          in: path
+          description: 'Insert a user id to get the data'
+          required: true
+          schema:
+            type: integer
+      responses:
+        200:
+          description: "sukses melihat data"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseObject'
+              example:
+                data:
+                  id: 1
+                  name: Habib
+                  email: habib@alterra.id
+                  password: habib123
+                message: showed a user data successfully
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    put:
+      tags:
+        - User
+      summary: Update a user data
+      description: This can only be done by the logged in user.
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: id user that need to be updated
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        description: Update an existent user in the store
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/responseObject'
+            example:
+              data:
+                  id: 1
+                  name: Habibullah
+                  email: habib@alterra.id
+                  password: habib123
+      responses:
+        default:
+          description: Updated a user data successfully
+        200:
+          description: "Updated a user data successfully"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/responseObject'
+              example:
+                data:
+                  id: 1
+                  name: Habibullah
+                  email: habib@alterra.id
+                  password: habib123
+                message: "Updated a user data successfully"
+        400:
+          $ref: '#/components/responses/400'
+        500:
+          $ref: '#/components/responses/500'
+    delete:
+      tags:
+        - User
+      summary: Delete user
+      description: This can only be done by the logged in user.
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: The id that needs to be deleted
+          required: true
+          schema:
+            type: integer
+      responses:
+        default: 
+          description: deleted a user successfully
+        '400':
+          description: Invalid id user input
+        '404':
+          description: id user not found
+components:
+  schemas:
+    responseObject:
+      type: object
+      properties:
+        data:
+          type: object
+        message:
+          type: string
+  responses:
+    400:
+      description: "Client's side error"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+          example:
+            message: "Invalid user input"
+    500:
+      description: "Server's side error"
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+            example:
+              message: "Unable to process the data"
