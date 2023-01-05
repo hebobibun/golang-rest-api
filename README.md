@@ -42,14 +42,6 @@ $ git clone https://github.com/hebobibun/golang-rest-api
 $ cd golang-rest-api
 ```
 
-
-- Delete .git
-
-```
-$ rm -rf .git
-```
-
-
 - Create a new database
 
 - Rename `local.env.example` to `local.env`
