@@ -22,8 +22,8 @@ See the documentation [here](https://documenter.getpostman.com/view/23707537/2s8
 # Tools & Requirements
 
 - Go 1.19.3
-- Echo v4
 - Gorm & MySQL
+- Echo v4
 - JWT
 
 ## How to Install
