@@ -45,7 +45,7 @@ $ cd golang-rest-api
 - Create a new database
 
 - Rename `local.env.example` to `local.env`
-- Adjust the content of it as your environment settings
+- Adjust `local.env` as your environment settings
 
 - Run the project
 
