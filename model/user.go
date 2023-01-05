@@ -48,6 +48,8 @@ func (um *UserModel) Login(email, password string) (User, error) {
 		return User{}, errors.New("Email/password doesn't match")
 	}
 
+	res.Password = ""
+
 	return res, nil
 }
 
@@ -61,14 +63,19 @@ func (um *UserModel) GetAll() ([]User, error) {
 	return res, nil
 }
 
-func (um *UserModel) GetByID(id int) (User, error) {
+func (um *UserModel) GetByID(id, idLogin int) (User, error) {
 	res := User{}
-	if err := um.DB.Where("id = ?", id).First(&res).Error; err != nil {
+	if err := um.DB.Where("id = ?", id).Omit("password").First(&res).Error; err != nil {
 		log.Println("Get user by ID query error : ", err.Error())
 		return User{}, err
 	}
 
-	return res, nil
+	if int(res.ID) != idLogin {
+		log.Println("Unauthorized request")
+		return User{}, errors.New("Unauthorized request")
+	} else {
+		return res, nil
+	}
 }
 
 func (um *UserModel) Update(updatedUser User) (User, error) {
@@ -83,15 +90,9 @@ func (um *UserModel) Update(updatedUser User) (User, error) {
 	return updatedUser, nil
 }
 
-func (um *UserModel) Delete(id int) error {
-	qry := um.DB.Delete(&User{}, id)
-
-	affRow := qry.RowsAffected
-
-	if affRow <= 0 {
-		log.Println("No rows affected")
-		return errors.New("Failed to delete, data not found")
-	}
+func (um *UserModel) Delete(id, idLogin int) error {
+	res := User{}
+	qry := um.DB.Where("id = ?", id).First(&res)
 
 	err := qry.Error
 
@@ -99,6 +100,24 @@ func (um *UserModel) Delete(id int) error {
 		log.Println("Delete query error : ", err.Error())
 		return errors.New("Unable to delete data")
 	}
+
+	if int(res.ID) != idLogin {
+		log.Println("Unauthorized request")
+		return errors.New("Unauthorized request")
+	}
+
+	qryDelete := um.DB.Delete(&User{}, id)
+
+	affRow := qryDelete.RowsAffected
+
+	if affRow <= 0 {
+		log.Println("No rows affected")
+		return errors.New("Failed to delete, data not found")
+	}
+
+	
+
+	
 
 	return nil
 }

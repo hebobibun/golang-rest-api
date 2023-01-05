@@ -5,6 +5,7 @@ import (
 	"api/model"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 	"time"
 
@@ -20,7 +21,7 @@ func CreateToken(userId int) (string, error) {
 	claims := jwt.MapClaims{}
 	claims["authorized"] = true
 	claims["userID"] = userId
-	claims["exp"] = time.Now().Add(time.Hour * 1).Unix() //Token expires after 1 hour
+	claims["exp"] = time.Now().Add(time.Hour * 24).Unix() // Token expires after 24 hour
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	return token.SignedString([]byte(config.InitConfig().JWTKey))
 }
@@ -102,10 +103,23 @@ func (uc *UserController) GetAll() echo.HandlerFunc {
 
 func (uc *UserController) GetID() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := ExtractToken(c)
-
-		res, err := uc.Mdl.GetByID(id)
+		idLogin := ExtractToken(c)
+		paramID := c.Param("id")
+		id, err := strconv.Atoi(paramID)
 		if err != nil {
+			log.Println("Convert id error : ", err.Error())
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "Please input number only",
+			})
+		}
+
+		res, err := uc.Mdl.GetByID(id, idLogin)
+		if err != nil {
+			if strings.Contains(err.Error(), "Unauthorized") {
+				return c.JSON(http.StatusBadRequest, map[string]interface{}{
+					"message": err.Error(),
+				})
+			}
 			log.Println("Query Error : ", err.Error())
 			return c.JSON(http.StatusInternalServerError, "Unable to process")
 		}
@@ -144,9 +158,18 @@ func (uc *UserController) Update() echo.HandlerFunc {
 
 func (uc *UserController) Delete() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		id := ExtractToken(c)
+		idLogin := ExtractToken(c)
 
-		err := uc.Mdl.Delete(id)
+		paramID := c.Param("id")
+		id, err := strconv.Atoi(paramID)
+		if err != nil {
+			log.Println("Convert id error : ", err.Error())
+			return c.JSON(http.StatusBadRequest, map[string]interface{}{
+				"message": "Please input number only",
+			})
+		}
+		
+		err = uc.Mdl.Delete(id, idLogin)
 
 		if err != nil {
 			log.Println("Delete error : ", err.Error())

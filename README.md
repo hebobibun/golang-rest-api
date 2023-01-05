@@ -7,3 +7,7 @@
 3. Buat sebuah endpoint untuk melihat barang yang sudah saya insert (butuh login)
 
 Total ada 4 endpoint semuanya perlu login, baru dapat diakses.
+
+## Result
+
+[API Documentation](https://documenter.getpostman.com/view/23707537/2s8Z72WCSk)

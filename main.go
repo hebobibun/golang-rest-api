@@ -33,9 +33,9 @@ func main() {
 	auth.Use(middleware.JWT([]byte(config.InitConfig().JWTKey)))
 	
 	auth.GET("/users", userControll.GetAll())
-	auth.GET("/users", userControll.GetID())
-	auth.PUT("/users", userControll.Update())
-	auth.DELETE("/users", userControll.Delete())
+	auth.GET("/users/:id", userControll.GetID())
+	auth.PUT("/users/:id", userControll.Update())
+	auth.DELETE("/users/:id", userControll.Delete())
 
 	auth.POST("/items", itemControll.Insert())
 	auth.GET("/items", itemControll.GetAll())

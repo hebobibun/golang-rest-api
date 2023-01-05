@@ -43,27 +43,27 @@ func (ic *ItemController) GetAll() echo.HandlerFunc {
 		res, err := ic.Mdl.GetAll(id)
 		if err != nil {
 			log.Println("query error", err.Error())
-			return c.JSON(http.StatusInternalServerError, "tidak bisa diproses")
+			return c.JSON(http.StatusInternalServerError, "Unable to process")
 		}
 
 		return c.JSON(http.StatusOK, map[string]interface{}{
 			"data":    res,
-			"message": "sukses mendapatkan semua data"})
+			"message": "Displayed all the items successfully"})
 	}
 }
 
 func (ic *ItemController) GetByID() echo.HandlerFunc {
 	return func(c echo.Context) error {
-		idUser := ExtractToken(c)
+		idLogin := ExtractToken(c)
 		paramID := c.Param("id")
-		cnvID, err := strconv.Atoi(paramID)
+		id, err := strconv.Atoi(paramID)
 		if err != nil {
 			log.Println("Convert id error : ", err.Error())
 			return c.JSON(http.StatusBadRequest, map[string]interface{}{
 				"message": "Please input number only",
 			})
 		}
-		res, err := ic.Mdl.GetByID(cnvID, idUser)
+		res, err := ic.Mdl.GetByID(id, idLogin)
 		if err != nil {
 			if strings.Contains(err.Error(), "Unauthorized") {
 				return c.JSON(http.StatusBadRequest, map[string]interface{}{

@@ -37,14 +37,14 @@ func (im *ItemModel) GetAll(id int) ([]Item, error) {
 	return res, nil
 }
 
-func (im *ItemModel) GetByID(id, idUser int) (Item, error) {
+func (im *ItemModel) GetByID(id, idLogin int) (Item, error) {
 	res := Item{}
 	if err := im.DB.Where("id = ?", id).First(&res).Error; err != nil {
 		log.Println("Get item By ID query error : ", err.Error())
 		return Item{}, err
 	}
 
-	if int(res.UserID) != idUser {
+	if int(res.UserID) != idLogin {
 		log.Println("Unauthorized request")
 		return Item{}, errors.New("Unauthorized request")
 	} else {
