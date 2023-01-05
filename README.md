@@ -18,7 +18,8 @@ A simple REST API for CRUD services with 2 sample entities
 
 # API Documentation
 
-See the documentation [here](https://documenter.getpostman.com/view/23707537/2s8Z72WCSk)
+See the documentation <a href="(https://documenter.getpostman.com/view/23707537/2s8Z72WCSk" target="_blank">here</a>
+
 # Tools & Requirements
 
 - Go 1.19.3
