@@ -1,13 +1,64 @@
-# JWT
+# Simple REST API
 
-## Instructions
+A simple REST API for CRUD services with 2 sample entities
+# Features
+## User : 
+- Register new user (admin/user)
+- Login user
+- Get a user data (show profile)
+- Show all users data (only admin)
+- Edit user data (update profile)
+- Soft delete
 
-1. Buatlah endpoint untuk menambah, mengubah, dan menghapus barang.
-2. Untuk mengakses endpoint barang user wajib login dulu.
-3. Buat sebuah endpoint untuk melihat barang yang sudah saya insert (butuh login)
+## Item :
+- Insert new item
+- Show one or all items
+- Update item detail
+- Soft delete
 
-Total ada 4 endpoint semuanya perlu login, baru dapat diakses.
+# API Documentation
 
-## Result
+See the documentation [here](https://documenter.getpostman.com/view/23707537/2s8Z72WCSk)
+# Tools & Requirements
 
-See [API Documentation](https://documenter.getpostman.com/view/23707537/2s8Z72WCSk) here.
+- Go 1.19.3
+- Echo v4
+- Gorm & MySQL
+
+## How to Install
+
+- Clone it
+
+```
+$ git clone https://github.com/hebobibun/golang-rest-api
+```
+
+
+- Go to directory
+
+```
+$ cd golang-rest-api
+```
+
+
+- Delete .git
+
+```
+$ rm -rf .git
+```
+
+
+- Create a new database
+
+- Rename `local.env.example` to `local.env`
+- Adjust the content of it as your environment settings
+
+- Run the project
+
+```
+$ go run .
+```
+
+# Enjoy
+
+Keep learning! ^^
